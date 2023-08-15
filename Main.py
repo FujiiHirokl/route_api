@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+import mysql.connector
+# MySQLデータベースへの接続
+connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+cursor = connector.cursor()
 
 class TaxIn(BaseModel):
     cost: int
@@ -7,9 +11,12 @@ class TaxIn(BaseModel):
 
 app = FastAPI()
 
-@app.get("/")
-def index():
-    return {"message": "Hello Masahiko"}
+@app.get("/get_all_data")
+def get_all_data():
+    query = "SELECT * FROM route_data"
+    cursor.execute(query)
+    result = cursor.fetchall()
+    return result
 
 @app.post("/")
 def calc(data: TaxIn):
