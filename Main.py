@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import mysql.connector
+
 # MySQLデータベースへの接続
 connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
 cursor = connector.cursor()
@@ -13,12 +14,52 @@ app = FastAPI()
 
 @app.get("/get_all_data")
 def get_all_data():
+    """全てのデータを取得するエンドポイント
+
+    Returns:
+        List[dict]: データベースから取得された結果のリスト
+    """
     query = "SELECT * FROM route_data"
+    cursor.execute(query)
+    result = cursor.fetchall()
+    return result
+
+@app.get("/get_all_data_mame")
+def get_all_data_mame():
+    """経路名を取得するエンドポイント
+
+    Returns:
+        List[dict]: データベースから取得された経路名のリスト
+    """
+    query = "SELECT 経路名 FROM route_data"
+    cursor.execute(query)
+    result = cursor.fetchall()
+    return result
+
+@app.get("/get_route_data/{route_number}")
+def get_route_data(route_number: int):
+    """指定された経路番号のxとyを順番の順に取得するエンドポイント
+
+    Args:
+        route_number (int): 取得したい経路番号
+
+    Returns:
+        List[dict]: 指定された経路番号のxとyデータのリスト
+    """
+    query = f"SELECT x, y FROM route_data WHERE 経路番号 = {route_number} ORDER BY 順番"
     cursor.execute(query)
     result = cursor.fetchall()
     return result
 
 @app.post("/")
 def calc(data: TaxIn):
+    """POSTリクエストを処理し、税込み価格を計算して返すエンドポイント
+
+    Args:
+        data (TaxIn): 計算に使用するデータ
+
+    Returns:
+        dict: 計算結果の辞書
+    """
     in_tax_cost = data.cost * (1 + data.tax_rate)
     return {'税込み価格': in_tax_cost}
