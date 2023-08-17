@@ -1,15 +1,13 @@
 import requests
-import json
 
 def main():
-    url = 'http://192.0.0.1:8000/'# 先ほどターミナルに出力されたURL
+    url = 'http://127.0.0.1:8000/update_coordinates'
     data = {
-        'cost': 100,
-        'tax_rate': 0.1
+        'device_id': 4,
+        'new_x': 490,
+        'new_y': 490
     }
-
-    # ここでAPIを呼び出す,データはjson形式ではないとエラーが起きる
-    res = requests.post(url, json.dumps(data))
+    res = requests.post(url, json=data)  # 辞書形式のデータを直接渡す
     print(res.json())
 
 if __name__ == '__main__':

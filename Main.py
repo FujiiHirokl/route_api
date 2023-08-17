@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import mysql.connector
-
 # MySQLデータベースへの接続
 connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
 cursor = connector.cursor()
@@ -9,7 +8,12 @@ cursor = connector.cursor()
 class TaxIn(BaseModel):
     cost: int
     tax_rate: float
-
+    
+class CoordinateUpdate(BaseModel):
+    device_id: int
+    new_x: float
+    new_y: float
+    
 app = FastAPI()
 
 @app.get("/get_all_data")
@@ -63,3 +67,25 @@ def calc(data: TaxIn):
     """
     in_tax_cost = data.cost * (1 + data.tax_rate)
     return {'税込み価格': in_tax_cost}
+
+@app.post("/update_coordinates")
+def update_coordinates(data: CoordinateUpdate):
+    """デバイスの座標を更新するエンドポイント
+
+    Args:
+        data (CoordinateUpdate): 更新する座標情報
+
+    Returns:
+        dict: 更新が成功したかどうかを示すメッセージ
+    """
+    connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='microphone', charset='utf8mb4')
+    cursor = connector.cursor()
+
+    update_query = "UPDATE devices SET x_coordinate = %s, y_coordinate = %s WHERE device_id = %s"
+    cursor.execute(update_query, (data.new_x, data.new_y, data.device_id))
+    connector.commit()
+
+    cursor.close()
+    connector.close()
+    
+    return {'message': f"デバイスID {data.device_id} の座標情報が更新されました。"}
