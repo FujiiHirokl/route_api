@@ -11,9 +11,10 @@ class TaxIn(BaseModel):
     
 class CoordinateUpdate(BaseModel):
     device_id: int
-    new_x: float
-    new_y: float
-    
+    new_x: int
+    new_y: int
+
+
 app = FastAPI()
 
 @app.get("/get_all_data")
@@ -68,6 +69,18 @@ def calc(data: TaxIn):
     in_tax_cost = data.cost * (1 + data.tax_rate)
     return {'税込み価格': in_tax_cost}
 
+@app.get("/device_get")
+def device_data():
+    connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='microphone', charset='utf8mb4')
+    cursor = connector.cursor()
+    query = "SELECT * FROM devices"
+    cursor.execute(query)
+    result = cursor.fetchall()
+    cursor.close()
+    connector.close()
+    return result
+    
+
 @app.post("/update_coordinates")
 def update_coordinates(data: CoordinateUpdate):
     """デバイスの座標を更新するエンドポイント
@@ -89,3 +102,4 @@ def update_coordinates(data: CoordinateUpdate):
     connector.close()
     
     return {'message': f"デバイスID {data.device_id} の座標情報が更新されました。"}
+
