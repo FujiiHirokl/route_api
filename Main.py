@@ -128,35 +128,30 @@ def update_coordinates(data: CoordinatesInput):
         dict: 推定された位置座標
     """
 
-    # 測定ポイントの座標
-    point1 = get_device_coordinates(1)
-    point2 = get_device_coordinates(2)
-    point3 = get_device_coordinates(3)
-    point4 = get_device_coordinates(4)
-    
+    # 測定ポイントの座標をリストにまとめる
+    points = [get_device_coordinates(i) for i in range(1, 5)]
 
-    # 測定ポイントからの距離にランダムなブレを加える
-    d1 = data.d1
-    d2 = data.d2
-    d3 = data.d3
-    d4 = data.d4
+    # 測定ポイントからの距離をリストにまとめる
+    distances = [data.d1, data.d2, data.d3, data.d4]
 
-    # 3点測位の実行
-    result = trilateration(point1, point2, point3, d1, d2, d3)
-    result_value = calculate_distance(calculate_distance(result, point1), d1) + calculate_distance(calculate_distance(result, point2), d2) + calculate_distance(calculate_distance(result, point3), d3)
+    # 結果を格納するリストを初期化
+    results = []
 
-    result2 = trilateration(point2, point3, point4, d2, d3, d4)
-    result2_value = calculate_distance(calculate_distance(result2, point2), d2) + calculate_distance(calculate_distance(result2, point3), d3) + calculate_distance(calculate_distance(result2, point4), d4)
+    # 各セットのトライアングレーションと距離の計算を行い、結果をリストに追加
+    for i in range(4):
+        next_i = (i + 1) % 4
+        next_next_i = (next_i + 1) % 4
 
-    result3 = trilateration(point3, point4, point1, d3, d4, d1)
-    result3_value = calculate_distance(calculate_distance(result3, point1), d1) + calculate_distance(calculate_distance(result3, point3), d3) + calculate_distance(calculate_distance(result3, point4), d4)
+        result = trilateration(points[i], points[next_i], points[next_next_i],
+                               distances[i], distances[next_i], distances[next_next_i])
+        result_value = calculate_distance(calculate_distance(result, points[i]), distances[i]) + \
+                       calculate_distance(calculate_distance(result, points[next_i]), distances[next_i]) + \
+                       calculate_distance(calculate_distance(result, points[next_next_i]), distances[next_next_i])
 
-    result4 = trilateration(point4, point1, point2, d4, d1, d2)
-    result4_value = calculate_distance(calculate_distance(result4, point1), d1) + calculate_distance(calculate_distance(result4, point2), d2) + calculate_distance(calculate_distance(result4, point4), d4)
+        results.append(result_value)
 
-    min_result = min(result_value, result2_value, result3_value, result4_value)
-
-    
+    # 最小の結果を取得
+    min_result = min(results)
 
     return {
         "estimated_position": min_result
