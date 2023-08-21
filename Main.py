@@ -1,6 +1,9 @@
+import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 import mysql.connector
+from potision_sum import calculate_distance, trilateration,get_device_coordinates
+
 # MySQLデータベースへの接続
 connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
 cursor = connector.cursor()
@@ -13,6 +16,12 @@ class CoordinateUpdate(BaseModel):
     device_id: int
     new_x: int
     new_y: int
+
+class CoordinatesInput(BaseModel):
+    d1: float
+    d2: float
+    d3: float
+    d4: float
 
 
 app = FastAPI()
@@ -71,6 +80,11 @@ def calc(data: TaxIn):
 
 @app.get("/device_get")
 def device_data():
+    """マイクの情報を取得する
+
+    Returns:
+        _type_: _description_
+    """
     connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='microphone', charset='utf8mb4')
     cursor = connector.cursor()
     query = "SELECT * FROM devices"
@@ -103,3 +117,47 @@ def update_coordinates(data: CoordinateUpdate):
     
     return {'message': f"デバイスID {data.device_id} の座標情報が更新されました。"}
 
+@app.post("/math_coordinates")
+def update_coordinates(data: CoordinatesInput):
+    """測定データから位置座標を推定するエンドポイント
+
+    Args:
+        data (CoordinatesInput): 測定データを含むモデル。d1, d2, d3, d4 が必要です。
+
+    Returns:
+        dict: 推定された位置座標
+    """
+
+    # 測定ポイントの座標
+    point1 = get_device_coordinates(1)
+    point2 = get_device_coordinates(2)
+    point3 = get_device_coordinates(3)
+    point4 = get_device_coordinates(4)
+    
+
+    # 測定ポイントからの距離にランダムなブレを加える
+    d1 = data.d1
+    d2 = data.d2
+    d3 = data.d3
+    d4 = data.d4
+
+    # 3点測位の実行
+    result = trilateration(point1, point2, point3, d1, d2, d3)
+    result_value = calculate_distance(calculate_distance(result, point1), d1) + calculate_distance(calculate_distance(result, point2), d2) + calculate_distance(calculate_distance(result, point3), d3)
+
+    result2 = trilateration(point2, point3, point4, d2, d3, d4)
+    result2_value = calculate_distance(calculate_distance(result2, point2), d2) + calculate_distance(calculate_distance(result2, point3), d3) + calculate_distance(calculate_distance(result2, point4), d4)
+
+    result3 = trilateration(point3, point4, point1, d3, d4, d1)
+    result3_value = calculate_distance(calculate_distance(result3, point1), d1) + calculate_distance(calculate_distance(result3, point3), d3) + calculate_distance(calculate_distance(result3, point4), d4)
+
+    result4 = trilateration(point4, point1, point2, d4, d1, d2)
+    result4_value = calculate_distance(calculate_distance(result4, point1), d1) + calculate_distance(calculate_distance(result4, point2), d2) + calculate_distance(calculate_distance(result4, point4), d4)
+
+    min_result = min(result_value, result2_value, result3_value, result4_value)
+
+    
+
+    return {
+        "estimated_position": min_result
+    }
