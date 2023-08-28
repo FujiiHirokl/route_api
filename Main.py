@@ -5,10 +5,7 @@ import mysql.connector
 from mysql.connector import Error
 from potision_sum import calculate_distance, trilateration,get_device_coordinates
 
-# MySQLデータベースへの接続
-connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
-cursor = connector.cursor()
-
+    
 class TaxIn(BaseModel):
     cost: int
     tax_rate: float
@@ -35,6 +32,8 @@ def get_all_data():
         List[dict]: データベースから取得された結果のリスト
     """
     try:
+        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+        cursor = connector.cursor()
         query = "SELECT * FROM route_data"
         cursor.execute(query)
         result = cursor.fetchall()
@@ -50,6 +49,8 @@ def get_all_data_mame():
         List[dict]: データベースから取得された経路名のリスト
     """
     try:
+        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+        cursor = connector.cursor()
         query = "SELECT 経路名 FROM route_data"
         cursor.execute(query)
         result = cursor.fetchall()
@@ -68,6 +69,8 @@ def get_route_data(route_number: int):
         List[dict]: 指定された経路番号のxとyデータのリスト
     """
     try:
+        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+        cursor = connector.cursor()
         query = f"SELECT x, y FROM route_data WHERE 経路番号 = {route_number} ORDER BY 順番"
         cursor.execute(query)
         result = cursor.fetchall()
