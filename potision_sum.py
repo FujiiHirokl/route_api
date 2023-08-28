@@ -1,13 +1,41 @@
+# ファイル: potision_sum.py
+# 作成者: 藤井広輝
+# 更新日: 2023/8/28
+# 説明: 位置推定プログラムで使う計算プログラム
+
+#必要なモジュールをインポート
 import numpy as np
 import mysql.connector
 from mysql.connector import Error
 
 def calculate_distance(point1, point2):
+    """2つの点の間の距離を計算します。
+
+    Args:
+        point1 (np.ndarray): 最初の点の座標。
+        point2 (np.ndarray): 2番目の点の座標。
+
+    Returns:
+        float: 2つの点の間の距離。
+    """
     return np.abs(np.linalg.norm(point1 - point2))
 
 
 
 def trilateration(point1, point2, point3, d1, d2, d3):
+    """トライアングレーション法を使用して、座標を推定します。
+
+    Args:
+        point1 (np.ndarray): 測定ポイント1の座標。
+        point2 (np.ndarray): 測定ポイント2の座標。
+        point3 (np.ndarray): 測定ポイント3の座標。
+        d1 (float): 測定ポイント1からの距離。
+        d2 (float): 測定ポイント2からの距離。
+        d3 (float): 測定ポイント3からの距離。
+
+    Returns:
+        tuple: 推定された座標のタプル (x, y)。
+    """
     A = 2 * np.abs(point2 - point1)  # ベクトル A の計算
     B = 2 * np.abs(point3 - point1)  # ベクトル B の計算
 

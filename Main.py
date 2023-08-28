@@ -1,26 +1,35 @@
+# ファイル: Main.py
+# 作成者: 藤井広輝
+# 更新日: 2023/8/28
+# 説明: AGVプログラムで扱うAPI
+
+# 必要なライブラリをインポート
 import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 import mysql.connector
 from mysql.connector import Error
+
+# 自作モジュールから必要な部分をインポート
 from potision_sum import calculate_distance, trilateration,get_device_coordinates
 
-    
+    # TaxInクラス: 計算に使用するデータモデル
 class TaxIn(BaseModel):
-    cost: int
-    tax_rate: float
-    
+    cost: int         # 商品の原価
+    tax_rate: float   # 税率
+
+# CoordinateUpdateクラス: デバイスの座標を更新するためのデータモデル
 class CoordinateUpdate(BaseModel):
-    device_id: int
-    new_x: int
-    new_y: int
+    device_id: int    # デバイスID
+    new_x: int        # 新しいX座標
+    new_y: int        # 新しいY座標
 
+# CoordinatesInputクラス: 測定データから位置座標を推定するためのデータモデル
 class CoordinatesInput(BaseModel):
-    d1: float
-    d2: float
-    d3: float
-    d4: float
-
+    d1: float         # 測定データ1
+    d2: float         # 測定データ2
+    d3: float         # 測定データ3
+    d4: float         # 測定データ4
 
 app = FastAPI()
 
