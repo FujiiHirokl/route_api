@@ -1,5 +1,6 @@
 import numpy as np
 import mysql.connector
+from mysql.connector import Error
 
 def calculate_distance(point1, point2):
     return np.abs(np.linalg.norm(point1 - point2))
@@ -54,15 +55,18 @@ def get_device_coordinates(device_id):
         np.ndarray or None: デバイスの座標情報を含むNumPy配列。デバイスが見つからない場合はNone。
     """
     # MySQLデータベースへの接続
-    connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='microphone', charset='utf8mb4')
-    cursor = connector.cursor()
-    
-    select_query = "SELECT x_coordinate, y_coordinate FROM devices WHERE device_id = %s"
-    cursor.execute(select_query, (device_id,))
-    result = cursor.fetchone()  # デバイスIDに対応する座標情報を取得
-    
-    if result:
-        x_coordinate, y_coordinate = result
-        return np.array([x_coordinate, y_coordinate])
-    else:
-        return None
+    try:
+        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='microphone', charset='utf8mb4')
+        cursor = connector.cursor()
+        
+        select_query = "SELECT x_coordinate, y_coordinate FROM devices WHERE device_id = %s"
+        cursor.execute(select_query, (device_id,))
+        result = cursor.fetchone()  # デバイスIDに対応する座標情報を取得
+        
+        if result:
+            x_coordinate, y_coordinate = result
+            return np.array([x_coordinate, y_coordinate])
+        else:
+            return None
+    except Error as e:
+        return {"erro" : str(e)}
