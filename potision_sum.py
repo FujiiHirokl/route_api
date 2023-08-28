@@ -69,4 +69,4 @@ def get_device_coordinates(device_id):
         else:
             return None
     except Error as e:
-        return {"erro" : str(e)}
+        return {"error" : str(e)}

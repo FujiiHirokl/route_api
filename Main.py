@@ -39,7 +39,7 @@ def get_all_data():
         result = cursor.fetchall()
         return result
     except Error as e:
-        return {"erro" : str(e)}
+        return {"error" : str(e)}
 
 @app.get("/get_all_data_mame")
 def get_all_data_mame():
@@ -56,7 +56,7 @@ def get_all_data_mame():
         result = cursor.fetchall()
         return result
     except Error as e:
-        return {"erro" : str(e)}
+        return {"error" : str(e)}
 
 @app.get("/get_route_data/{route_number}")
 def get_route_data(route_number: int):
@@ -76,7 +76,7 @@ def get_route_data(route_number: int):
         result = cursor.fetchall()
         return result
     except Error as e:
-        return {"erro" : str(e)}
+        return {"error" : str(e)}
 
 @app.post("/")
 def calc(data: TaxIn):
@@ -108,7 +108,7 @@ def device_data():
         connector.close()
         return result
     except Error as e:
-        return {"erro" : str(e)}
+        return {"error" : str(e)}
     
 
 @app.post("/update_coordinates")
@@ -134,7 +134,7 @@ def update_coordinates(data: CoordinateUpdate):
         
         return {'message': f"デバイスID {data.device_id} の座標情報が更新されました。"}
     except Error as e:
-        return {"erro" : str(e)}
+        return {"error" : str(e)}
     
 @app.post("/math_coordinates")
 def update_coordinates(data: CoordinatesInput):
