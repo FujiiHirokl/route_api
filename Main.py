@@ -34,6 +34,7 @@ class CoordinatesInput(BaseModel):
 class coordinate_position(BaseModel):
     coordinate_position_x: int  #格納座標
     coordinate_position_y: int  #格納座標
+    
 
 
 app = FastAPI()
@@ -196,7 +197,6 @@ def update_Coordinate(date: coordinate_position):
 
     Args:
         
-
     Returns:
 
     """
@@ -204,13 +204,15 @@ def update_Coordinate(date: coordinate_position):
         connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
         cursor = connector.cursor()
 
-        update_query = "UPDATE devices SET x_coordinate = %s, y_coordinate = %s WHERE device_id = %s"
-        cursor.execute(update_query, (data.new_x, data.new_y, data.device_id))
+        #update_query = "Coordinate  SET x_coordinate = %s, y_coordinate = %s WHERE device_id = %s"
+        update_query = "UPDATE Coordinates SET(x, y) = (%s, %s)WHERE id = 1"
+        cursor.execute(update_query, (date.coordinate_position_x, date.coordinate_position_y))
         connector.commit()
-
+        
         cursor.close()
         connector.close()
         
-        return {'message': f"デバイスID {data.device_id} の座標情報が更新されました。"}
+        return {"x座標": str(date.coordinate_position_x) + "y座標" + str(date.coordinate_position_y) + "格納しました"}
+    
     except Error as e:
         return {"error" : str(e)}
