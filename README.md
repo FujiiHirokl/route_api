@@ -65,7 +65,7 @@
 1. 依存関係をインストールします。以下のコマンドを実行してください。
 
     ```
-    pip install numpy fastapi pydantic mysql-connector-python
+    pip install numpy　uvicorn fastapi pydantic mysql-connector-python
     ```
 
 2. プロジェクトディレクトリに移動します。
@@ -73,6 +73,9 @@
 3. FastAPIアプリケーションを起動します。
 
     ```
+    #自分のPC内で使う場合
+    uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+    #内部ネットワークに公開する場合
     uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ```
 
