@@ -10,7 +10,9 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import mysql.connector
 from mysql.connector import Error
+import os
 
+db_pass = os.getenv('db_pass')
 # 自作モジュールから必要な部分をインポート
 from potision_sum import calculate_distance, trilateration,get_device_coordinates
 
@@ -48,7 +50,7 @@ def get_all_data():
         List[dict]: データベースから取得された結果のリスト
     """
     try:
-        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+        connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='root', charset='utf8mb4')
         cursor = connector.cursor()
         query = "SELECT * FROM route_data"
         cursor.execute(query)
@@ -65,7 +67,7 @@ def get_all_data_mame():
         List[dict]: データベースから取得された経路名のリスト
     """
     try:
-        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+        connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='root', charset='utf8mb4')
         cursor = connector.cursor()
         query = "SELECT 経路名 FROM route_data"
         cursor.execute(query)
@@ -85,7 +87,7 @@ def get_route_data(route_number: int):
         List[dict]: 指定された経路番号のxとyデータのリスト
     """
     try:
-        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+        connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='root', charset='utf8mb4')
         cursor = connector.cursor()
         query = f"SELECT x, y FROM route_data WHERE 経路番号 = {route_number} ORDER BY 順番"
         cursor.execute(query)
@@ -115,7 +117,7 @@ def device_data():
         _type_: _description_
     """
     try:
-        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='microphone', charset='utf8mb4')
+        connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='microphone', charset='utf8mb4')
         cursor = connector.cursor()
         query = "SELECT * FROM devices"
         cursor.execute(query)
@@ -138,7 +140,7 @@ def update_coordinates(data: CoordinateUpdate):
         dict: 更新が成功したかどうかを示すメッセージ
     """
     try:
-        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='microphone', charset='utf8mb4')
+        connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='microphone', charset='utf8mb4')
         cursor = connector.cursor()
 
         update_query = "UPDATE devices SET x_coordinate = %s, y_coordinate = %s WHERE device_id = %s"
@@ -205,7 +207,7 @@ def update_Coordinate(date: coordinate_position):
     """
     try:
         # データベースに接続
-        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+        connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='root', charset='utf8mb4')
         cursor = connector.cursor()
         
         # UPDATEクエリの作成と実行

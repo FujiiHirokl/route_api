@@ -7,6 +7,9 @@
 import numpy as np
 import mysql.connector
 from mysql.connector import Error
+import os
+
+db_pass = os.getenv('db_pass')
 
 def calculate_distance(point1, point2):
     """2つの点の間の距離を計算します。
@@ -84,7 +87,7 @@ def get_device_coordinates(device_id):
     """
     # MySQLデータベースへの接続
     try:
-        connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='microphone', charset='utf8mb4')
+        connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='microphone', charset='utf8mb4')
         cursor = connector.cursor()
         
         select_query = "SELECT x_coordinate, y_coordinate FROM devices WHERE device_id = %s"

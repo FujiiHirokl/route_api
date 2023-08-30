@@ -2,9 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 import mysql.connector
+import os
+
+db_pass = os.getenv('db_pass')
 
 # MySQLデータベースへの接続
-connector = mysql.connector.connect(user='root', password='wlcm2T4', host='localhost', database='root', charset='utf8mb4')
+connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='root', charset='utf8mb4')
 cursor = connector.cursor()
 
 
