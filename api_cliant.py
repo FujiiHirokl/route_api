@@ -37,7 +37,7 @@ window = tk.Tk()  # Tkinterウィンドウを作成
 window.title("データ取得アプリ")  # ウィンドウのタイトルを設定
 
 # ウィンドウの幅と高さを指定
-window.geometry("400x200")  # 幅400ピクセル、高さ200ピクセル
+window.geometry("600x200")  # 幅400ピクセル、高さ200ピクセル
 
 # ラベルを作成
 result_label = tk.Label(window, text="")  # ラベルを作成し、初期テキストは空に設定
