@@ -233,3 +233,34 @@ def update_Coordinate(date: coordinate_position):
     except Error as e:
         # エラーメッセージを返す
         return {"error": str(e)}
+    
+@app.get("/Get_position_coordinates")
+def Get_position_coordinates():
+    """
+    座標を取得するエンドポイントです。
+
+    Returns:
+        dict: 座標情報
+    """
+    try:
+        # データベースに接続
+        connector = mysql.connector.connect(user='root', password=db_pass, host='localhost', database='root', charset='utf8mb4')
+        cursor = connector.cursor()
+        
+        # SELECTクエリの作成と実行
+        select_query = "SELECT x, y FROM coordinates WHERE id = 1;"
+        cursor.execute(select_query)
+        
+        # 結果の取得
+        result = cursor.fetchone()
+        
+        # リソースを解放
+        cursor.close()
+        connector.close()
+        
+        # 結果を返す
+        return {"message": "x座標 " + str(result[0]) + " および y座標 " + str(result[1]) + " を格納しました"}
+    
+    except Error as e:
+        # エラーメッセージを返す
+        return {"error": str(e)}
