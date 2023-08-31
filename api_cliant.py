@@ -8,7 +8,7 @@ import tkinter as tk
 import requests
 
 # FastAPIサーバーのURLを設定
-api_url = "http://localhost:8000/device_get"  # FastAPIサーバーのURLを適切に設定してください
+api_url = "http://localhost:8000/Get_position_coordinates"  # FastAPIサーバーのURLを適切に設定してください
 
 # 取得ボタンがクリックされたときの処理を定義
 def get_data():
