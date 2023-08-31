@@ -1,3 +1,4 @@
+#!/opt/hostedtoolcache/Python/3.11.5/x64/bin/python3
 # ファイル: api_cliant.py
 # 作成者: 藤井広輝
 # 更新日: 2023/8/30
