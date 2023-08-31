@@ -258,7 +258,7 @@ def Get_position_coordinates():
         cursor.close()
         connector.close()
         
-        # 結果を返す
+            # 結果を返す
         return {"message": "x座標 " + str(result[0]) + " および y座標 " + str(result[1]) + " を格納しました"}
     
     except Error as e:

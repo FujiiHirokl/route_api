@@ -1,3 +1,4 @@
+#!/opt/hostedtoolcache/Python/3.11.5/x64/bin/python3
 # ファイル: api_cliant.py
 # 作成者: 藤井広輝
 # 更新日: 2023/8/30
@@ -8,7 +9,7 @@ import tkinter as tk
 import requests
 
 # FastAPIサーバーのURLを設定
-api_url = "http://localhost:8000/device_get"  # FastAPIサーバーのURLを適切に設定してください
+api_url = "http://localhost:8000/Get_position_coordinates"  # FastAPIサーバーのURLを適切に設定してください
 
 # 取得ボタンがクリックされたときの処理を定義
 def get_data():
