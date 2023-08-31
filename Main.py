@@ -13,6 +13,14 @@ from mysql.connector import Error
 import os
 
 db_pass = os.getenv('db_pass')
+
+# 環境変数が設定されていない場合のデフォルト値
+default_db_pass = 'default_password'
+
+# データベースパスワードが存在しない場合、デフォルト値を使用
+if db_pass is None:
+    db_pass = default_db_pass
+    
 # 自作モジュールから必要な部分をインポート
 from potision_sum import calculate_distance, trilateration,get_device_coordinates
 
