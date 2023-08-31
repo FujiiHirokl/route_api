@@ -1,4 +1,4 @@
-
+#!/opt/hostedtoolcache/Python/3.11.5/x64/bin/python3
 # ファイル: Main.py
 # 作成者: 藤井広輝
 # 更新日: 2023/8/28
